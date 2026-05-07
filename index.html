@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Shop ♦ Game Items</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script>
+    tailwind.config={theme:{extend:{colors:{gb:{bg:'var(--p-bg)',dk:'var(--p-dk)',lt:'var(--p-lt)',ltst:'var(--p-ltst)'}},fontFamily:{px:['"Press Start 2P"','cursive'],rt:['"VT323"','monospace']}}}}
+    </script>
+    <style>
+    :root{--p-bg:#0f380f;--p-dk:#306230;--p-lt:#8bac0f;--p-ltst:#9bbc0f}
+    *{image-rendering:pixelated}
+    body{font-family:'VT323',monospace}
+    ::selection{background:var(--p-lt);color:var(--p-bg)}
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:var(--p-bg)}
+    ::-webkit-scrollbar-thumb{background:var(--p-dk);border:2px solid var(--p-bg)}
+    .scanlines::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:200}
+    .gb-sunken{border:3px solid var(--p-bg);border-color:var(--p-bg) var(--p-lt) var(--p-lt) var(--p-bg);background:var(--p-lt)}
+    .gb-card{background:var(--p-ltst);border:3px solid var(--p-bg);box-shadow:4px 4px 0 0 var(--p-bg);transition:transform .12s,box-shadow .12s}
+    .gb-card:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 0 var(--p-bg)}
+    .gb-btn{background:var(--p-ltst);border:3px solid var(--p-bg);color:var(--p-bg);box-shadow:3px 3px 0 0 var(--p-bg);transition:all .1s;text-decoration:none;display:inline-block}
+    .gb-btn:hover{background:var(--p-lt)}.gb-btn:active{transform:translateY(2px);box-shadow:1px 1px 0 0 var(--p-bg)}
+    .boot-lines{background:repeating-linear-gradient(0deg,var(--p-ltst) 0px,var(--p-ltst) 2px,var(--p-bg) 2px,var(--p-bg) 4px)}
+    .toast{transform:translateY(20px);opacity:0;transition:all .3s ease}.toast.show{transform:translateY(0);opacity:1}
+    @keyframes float-up{0%{transform:translateY(0);opacity:0}10%{opacity:.3}90%{opacity:.3}100%{transform:translateY(-100vh);opacity:0}}
+    .float-pixel{position:fixed;width:4px;height:4px;background:var(--p-lt);pointer-events:none;z-index:0}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}.blink{animation:blink 1s step-end infinite}
+    @keyframes blink-fast{0%,100%{opacity:1}50%{opacity:0}}.blink-fast{animation:blink-fast .4s step-end infinite}
+    .gb-frame{background:#306230;border:4px solid #0f380f;border-radius:12px 12px 12px 60px;padding:14px;position:relative}
+    .gb-screen{background:var(--p-ltst);border:4px solid var(--p-bg);border-color:var(--p-bg) var(--p-lt) var(--p-lt) var(--p-bg);position:relative}
+    .crt-vignette::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,var(--p-bg) 100%);opacity:.18;pointer-events:none;border-radius:inherit;z-index:1}
+    .dpad-h,.dpad-v{position:absolute;background:#1a4a1a;border:2px solid #0f380f;pointer-events:none}
+    .dpad-h{width:50px;height:18px;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:2px}
+    .dpad-v{width:18px;height:50px;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:2px}
+    .ab-circle{width:30px;height:30px;border-radius:50%;background:#8bac0f;border:2px solid #0f380f;display:flex;align-items:center;justify-content:center;transition:background .08s}
+    .ab-circle:active{background:#9bbc0f}
+    .speaker-grille{width:32px;height:24px;background:repeating-linear-gradient(-30deg,#0f380f,#0f380f 2px,#1a4a1a 2px,#1a4a1a 4px);border-radius:3px}
+    .power-led{width:6px;height:6px;border-radius:50%;background:#8bac0f;box-shadow:0 0 6px #8bac0f}
+    .ss-pill{width:26px;height:7px;background:#1a4a1a;border:1px solid #0f380f;border-radius:4px;transform:rotate(-25deg)}
+    @keyframes slime-idle{0%,100%{transform:scaleX(1) scaleY(1)}50%{transform:scaleX(1.08) scaleY(.93)}}.slime{animation:slime-idle 1.8s ease-in-out infinite}
+    .dpad-btn{position:absolute;background:transparent;border:none;cursor:pointer;z-index:5;padding:0;touch-action:manipulation}
+    @keyframes note-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}.note-anim{animation:note-bounce .5s ease-in-out infinite}
+    .modal-bg{background:var(--p-bg);opacity:.88}
+    @keyframes slide-up{from{transform:translate(-50%,-50%) scale(.9);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}.modal-enter{animation:slide-up .25s ease-out}
+    .sr{background:var(--p-dk)}
+    @keyframes waveform{0%,100%{height:4px}50%{height:14px}}.wave-bar{animation:waveform .6s ease-in-out infinite}
+    @keyframes ach-pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}.ach-pop{animation:ach-pop .5s ease-out}
+    </style>
+</head>
+<body class="bg-gb-bg text-gb-ltst scanlines overflow-x-hidden">
+
+<div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] gb-card px-4 py-2 font-px text-[8px] text-gb-bg flex items-center gap-2">
+<span class="iconify text-gb-lt" data-icon="lucide:check"></span><span id="toast-msg">Copied!</span>
+</div>
+
+<div id="boot-screen" class="fixed inset-0 z-[150] bg-gb-bg flex items-center justify-center cursor-pointer select-none" tabindex="0">
+<div class="text-center">
+<div id="boot-led" class="power-led mx-auto mb-6 opacity-0 transition-opacity duration-500"></div>
+<div id="boot-display" class="w-72 h-52 border-4 border-gb-dk bg-gb-bg flex items-center justify-center relative overflow-hidden mx-auto">
+<div id="boot-lines" class="absolute inset-0 boot-lines opacity-0" style="height:0;transition:height 1s ease-out,opacity .3s"></div>
+<div id="boot-text" class="font-px text-gb-ltst text-xs text-center relative z-10 opacity-0 transition-opacity duration-500"></div>
+</div>
+<div id="boot-label" class="mt-2 font-px text-[5px] text-gb-lt opacity-0 tracking-widest transition-opacity duration-500">DOT MATRIX WITH STEREO SOUND</div>
+<div id="boot-prompt" class="mt-8 font-rt text-xl text-gb-lt blink">Press START to begin</div>
+</div>
+</div>
+
+<div id="main-content" class="hidden opacity-0 transition-opacity duration-700">
+<header class="fixed top-0 left-0 right-0 z-50 bg-gb-bg border-b-2 border-gb-dk">
+<div class="max-w-5xl mx-auto px-4 h-12 flex items-center justify-between">
+<span class="font-px text-[9px] text-gb-ltst tracking-wider">PIXEL SHOP</span>
+<nav class="flex gap-6">
+<a href="#gameboy" class="font-rt text-base text-gb-lt hover:text-gb-ltst transition-colors">Play</a>
+<a href="#contact" class="font-rt text-base text-gb-lt hover:text-gb-ltst transition-colors">Contact</a>
+</nav>
+</div>
+</header>
+
+<section id="gameboy" class="pt-20 pb-8 px-4 flex justify-center">
+<div class="gb-frame w-full max-w-md">
+<div class="flex justify-between items-center mb-2 px-1">
+<div class="flex items-center gap-1.5"><div class="power-led"></div><span class="font-px text-[5px] text-gb-lt">POWER</span></div>
+<span class="font-px text-[4px] text-gb-lt tracking-wider hidden sm:block">DOT MATRIX WITH STEREO SOUND</span>
+</div>
+<div class="gb-screen crt-vignette mb-3" style="height:320px">
+<div id="playtime" class="absolute top-1 right-2 z-20 font-rt text-[11px] select-none" style="color:var(--p-dk);text-shadow:0 0 3px var(--p-ltst)">00:00</div>
+<div id="scr" class="p-3 h-full overflow-hidden relative" style="z-index:2"></div>
+<div id="ach-popup" class="hidden absolute inset-0 flex items-center justify-center" style="background:var(--p-bg);opacity:.92;z-index:10">
+<div class="text-center ach-pop">
+<div class="font-px text-[7px] mb-1" style="color:var(--p-lt)">★ ACHIEVEMENT ★</div>
+<div class="font-px text-[9px] mb-2" style="color:var(--p-ltst)">UNLOCKED!</div>
+<div class="font-rt text-lg" id="ach-name" style="color:var(--p-ltst)"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-center gap-10 mb-3">
+<button onclick="inp('select')" class="flex flex-col items-center gap-0.5 cursor-pointer active:scale-95 transition-transform" aria-label="Select"><div class="ss-pill"></div><span class="font-px text-[4px] text-gb-lt mt-0.5">SELECT</span></button>
+<button onclick="inp('start')" class="flex flex-col items-center gap-0.5 cursor-pointer active:scale-95 transition-transform" aria-label="Start"><div class="ss-pill"></div><span class="font-px text-[4px] text-gb-lt mt-0.5">START</span></button>
+</div>
+<div class="flex justify-between items-end px-3 pb-1">
+<div class="relative w-14 h-14"><div class="dpad-h"></div><div class="dpad-v"></div>
+<button class="dpad-btn" style="top:0;left:50%;transform:translateX(-50%);width:20px;height:18px" onclick="event.stopPropagation();inp('up')" aria-label="Up"></button>
+<button class="dpad-btn" style="bottom:0;left:50%;transform:translateX(-50%);width:20px;height:18px" onclick="event.stopPropagation();inp('down')" aria-label="Down"></button>
+<button class="dpad-btn" style="left:0;top:50%;transform:translateY(-50%);width:18px;height:20px" onclick="event.stopPropagation();inp('left')" aria-label="Left"></button>
+<button class="dpad-btn" style="right:0;top:50%;transform:translateY(-50%);width:18px;height:20px" onclick="event.stopPropagation();inp('right')" aria-label="Right"></button>
+</div>
+<div class="flex items-end gap-3">
+<button onclick="inp('b')" class="flex flex-col items-center gap-0.5 cursor-pointer" aria-label="B"><div class="ab-circle"><span class="font-px text-[7px] text-gb-bg">B</span></div></button>
+<button onclick="inp('a')" class="flex flex-col items-center gap-0.5 -mt-3 cursor-pointer" aria-label="A"><div class="ab-circle"><span class="font-px text-[7px] text-gb-bg">A</span></div></button>
+</div>
+<div class="speaker-grille mb-0.5"></div>
+</div>
+</div>
+</section>
+
+<section class="pb-10 px-4">
+<div class="max-w-md mx-auto gb-card p-4">
+<div class="font-px text-[7px] text-gb-bg mb-3 text-center">HOW TO USE</div>
+<div class="grid grid-cols-2 gap-y-2 gap-x-4 font-rt text-sm text-gb-dk">
+<div>↑↓ Navigate</div><div>←→ Browse items/tracks</div>
+<div>A = Select / Order</div><div>B = Go back</div>
+<div>START = Pause music</div><div>SELECT = Palette / Compare</div>
+<div>Z = A key</div><div>X = B key</div>
+</div>
+</div>
+</section>
+
+<section id="contact" class="pb-16 px-4">
+<div class="max-w-md mx-auto">
+<div class="flex items-center gap-2 mb-6 justify-center"><span class="iconify text-gb-lt text-xl" data-icon="lucide:message-circle"></span><h2 class="font-px text-[10px] text-gb-ltst">CONTACT INFO</h2></div>
+<div class="gb-card p-0 overflow-hidden">
+<div class="bg-gb-dk px-4 py-2.5 border-b-[3px] border-gb-bg flex items-center gap-2"><span class="iconify text-gb-ltst text-sm" data-icon="lucide:user"></span><span class="font-px text-[7px] text-gb-ltst tracking-wide">FIND ME IN-GAME</span></div>
+<div class="p-4 space-y-4">
+<div><div class="font-rt text-sm text-gb-dk mb-1">In-Game Name</div><div class="flex gap-2"><div class="gb-sunken px-3 py-1.5 flex-1 font-rt text-lg text-gb-bg">Miyuki</div><button onclick="cp('Miyuki')" class="gb-btn px-3 py-1 font-px text-[6px] cursor-pointer">COPY</button></div></div>
+<div><div class="font-rt text-sm text-gb-dk mb-1">Server</div><div class="gb-sunken px-3 py-1.5 font-rt text-lg text-gb-bg">WLO Safe Haven</div></div>
+</div>
+</div>
+</div>
+
+<div class="max-w-md mx-auto mt-6">
+<div class="gb-card p-3 space-y-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gb-bg flex items-center justify-center font-px text-[7px] text-gb-ltst">VR</div>
+<div class="flex-1">
+<div class="font-px text-[9px] text-gb-bg flex items-center gap-2">veririsky_722<span class="text-[8px] text-gb-lt">♥</span></div>
+<div class="font-rt text-xs text-gb-lt">Online</div>
+</div>
+</div>
+<div class="border-t-2 border-gb-dk pt-2 space-y-1">
+<div class="flex justify-between"><span class="font-rt text-xs text-gb-dk">IGN:</span><span class="font-rt text-xs text-gb-bg">Miyuki</span></div>
+<div class="flex justify-between"><span class="font-rt text-xs text-gb-dk">Status:</span><span class="font-rt text-xs text-gb-ltst">Selling rare items</span></div>
+</div>
+<button onclick="cp('veririsky_722')" class="gb-btn w-full py-1.5 font-px text-[7px] cursor-pointer">COPY DISCORD</button>
+</div>
+</div>
+
+<div class="max-w-md mx-auto mt-4">
+<a href="https://discord.gg/97qVe8A3jp" target="_blank" rel="noopener" class="gb-btn block text-center px-4 py-2.5 font-px text-[8px]"><span class="iconify inline-block mr-1 -mt-0.5" data-icon="lucide:external-link"></span>JOIN SERVER</a>
+</div>
+</section>
+
+<footer class="border-t-2 border-gb-dk py-8 px-4">
+<div class="max-w-5xl mx-auto flex flex-col items-center gap-3">
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="gb-btn px-4 py-1.5 font-px text-[6px] cursor-pointer">▲ BACK TO TOP</button>
+<div class="font-rt text-sm text-gb-dk text-center">© 2024 Pixel Shop — All items are virtual game items</div>
+<div class="flex items-center gap-1.5"><div class="slime"><div class="w-4 h-3 bg-gb-lt border border-gb-bg rounded-b relative"><div class="absolute top-0.5 left-0.5 w-0.5 h-0.5 bg-gb-bg rounded-full"></div><div class="absolute top-0.5 right-0.5 w-0.5 h-0.5 bg-gb-bg rounded-full"></div></div></div><span class="font-rt text-xs text-gb-lt">Thanks for visiting~</span></div>
+</div>
+</footer>
+</div>
+
+<div id="order-modal" class="fixed inset-0 z-[100] hidden">
+<div class="modal-bg absolute inset-0" onclick="clModal()"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[92%] max-w-sm modal-enter">
+<div class="gb-card p-0 overflow-hidden">
+<div class="bg-gb-dk px-4 py-2.5 border-b-[3px] border-gb-bg flex items-center justify-between"><span class="font-px text-[8px] text-gb-ltst" id="mn"></span><span class="font-rt text-sm text-gb-lt" id="ml"></span></div>
+<div class="p-4"><div class="gb-sunken p-3 flex items-center justify-center h-16 mb-4" id="mi"></div><div id="ms" class="space-y-1 mb-4"></div><div class="flex items-center justify-between border-t-2 border-gb-dk pt-3"><span class="font-rt text-lg text-gb-dk">Price:</span><span class="font-px text-xs text-gb-bg" id="mp"></span></div></div>
+<div class="bg-gb-dk px-4 py-3 border-t-[3px] border-gb-bg flex gap-6 justify-center">
+<a href="https://discord.gg/97qVe8A3jp" target="_blank" rel="noopener" class="flex flex-col items-center gap-1 no-underline group"><div class="ab-circle group-hover:bg-gb-ltst transition-colors"><span class="font-px text-[6px] text-gb-bg">A</span></div><span class="font-px text-[5px] text-gb-lt">DISCORD</span></a>
+<a href="https://forms.gle/AMnEJmZAzguWdTra8" target="_blank" rel="noopener" class="flex flex-col items-center gap-1 no-underline group"><div class="ab-circle group-hover:bg-gb-ltst transition-colors"><span class="font-px text-[6px] text-gb-bg">B</span></div><span class="font-px text-[5px] text-gb-lt">FORM</span></a>
+</div>
+</div>
+<div class="text-center mt-2 font-rt text-xs text-gb-lt blink">click outside to close</div>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  AUDIO ENGINE
+// ═══════════════════════════════════════
+let AC=null,MG=null;
+function initA(){if(AC)return;AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.5;MG.connect(AC.destination)}
+function tn(f,d,t,v,s){if(!AC||f<=0)return;const x=s||AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=t||'square';o.frequency.setValueAtTime(f,x);g.gain.setValueAtTime(Math.max(.0001,v||.04),x);g.gain.exponentialRampToValueAtTime(.0001,x+d*.92);o.connect(g);g.connect(MG);o.start(x);o.stop(x+d)}
+function sw(f1,f2,d,t,v){if(!AC)return;const x=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type=t||'square';o.frequency.setValueAtTime(f1,x);o.frequency.exponentialRampToValueAtTime(Math.max(1,f2),x+d);g.gain.setValueAtTime(Math.max(.0001,v||.04),x);g.gain.exponentialRampToValueAtTime(.0001,x+d*.92);o.connect(g);g.connect(MG);o.start(x);o.stop(x+d)}
+function sfxM(){tn(880,.03,'square',.03)}
+function sfxS(){tn(660,.04,'square',.04);setTimeout(()=>tn(990,.07,'square',.04),50)}
+function sfxB(){tn(440,.04,'square',.04);setTimeout(()=>tn(330,.05,'square',.04),50)}
+function sfxBoot(){sw(1200,120,.4,'square',.04);setTimeout(()=>tn(1047,.18,'square',.04),500)}
+function sfxCp(){tn(523,.03,'square',.04);setTimeout(()=>tn(784,.05,'square',.04),40)}
+function sfxOrd(){tn(784,.05,'square',.05);setTimeout(()=>tn(1047,.05,'square',.05),55);setTimeout(()=>tn(1319,.1,'square',.05),115)}
+function sfxGacha(){for(let i=0;i<10;i++)setTimeout(()=>tn(400+Math.random()*600,.03,'square',.03),i*60)}
+function sfxAch(){tn(523,.06,'square',.04);setTimeout(()=>tn(659,.06,'square',.04),70);setTimeout(()=>tn(784,.06,'square',.04),140);setTimeout(()=>tn(1047,.15,'square',.04),210)}
+
+// ═══════════════════════════════════════
+//  8-BIT MUSIC (original compositions)
+// ═══════════════════════════════════════
+const R={C3:131,D3:147,Eb3:156,E3:165,F3:175,Fs3:185,G3:196,Ab3:208,A3:220,Bb3:233,B3:247,C4:262,D4:294,Eb4:311,E4:330,F4:349,Fs4:370,G4:392,Ab4:415,A4:440,Bb4:466,B4:494,C5:523,D5:587,Eb5:622,E5:659,F5:698,G5:784,A5:880};
+
+const trks=[
+{name:"Crystal Arpeggio",style:"Arpeggio Title",notes:[
+{f:R.E3,d:.11,h:R.E3},{f:R.B3,d:.11},{f:R.E4,d:.11},{f:R.G4,d:.11},{f:R.B4,d:.22},
+{f:R.C4,d:.11,h:R.C3},{f:R.E4,d:.11},{f:R.G4,d:.11},{f:R.C5,d:.11},{f:R.G4,d:.22},
+{f:R.G3,d:.11,h:R.G3},{f:R.B3,d:.11},{f:R.D4,d:.11},{f:R.G4,d:.11},{f:R.B4,d:.22},
+{f:R.D4,d:.11,h:R.D3},{f:R.Fs4,d:.11},{f:R.A4,d:.11},{f:R.D5,d:.11},{f:R.A4,d:.11},{f:R.Fs4,d:.11},{f:R.E4,d:.28,h:R.E3},
+{f:R.E3,d:.11,h:R.E3},{f:R.G3,d:.11},{f:R.B3,d:.11},{f:R.E4,d:.11},{f:R.G4,d:.11},{f:R.B4,d:.11},{f:R.E5,d:.22},
+{f:R.A3,d:.11,h:R.A3},{f:R.C4,d:.11},{f:R.E4,d:.11},{f:R.A4,d:.11},{f:R.E4,d:.11},{f:R.C4,d:.11},{f:R.A3,d:.22},
+{f:R.B3,d:.11,h:R.B3},{f:R.D4,d:.11},{f:R.Fs4,d:.11},{f:R.B4,d:.11},{f:R.Fs4,d:.11},{f:R.D4,d:.11},{f:R.B3,d:.11},{f:R.E3,d:.28,h:R.E3},
+]},
+{name:"Block Drop",style:"Folk Dance",notes:[
+{f:R.A4,d:.085,h:R.A3},{f:R.C5,d:.085},{f:R.E5,d:.17,h:R.A3},{f:R.D5,d:.085},{f:R.C5,d:.085},{f:R.B4,d:.17,h:R.G3},{f:R.A4,d:.085},{f:R.G4,d:.085},{f:R.A4,d:.17,h:R.A3},
+{f:R.F4,d:.085,h:R.F3},{f:R.A4,d:.085},{f:R.C5,d:.17,h:R.F3},{f:R.B4,d:.085},{f:R.A4,d:.085},{f:R.G4,d:.17,h:R.E3},{f:R.F4,d:.085},{f:R.E4,d:.085},{f:R.F4,d:.17,h:R.F3},
+{f:R.E4,d:.085,h:R.E3},{f:R.G4,d:.085},{f:R.B4,d:.17,h:R.E3},{f:R.A4,d:.085},{f:R.G4,d:.085},{f:R.F4,d:.17,h:R.D3},{f:R.E4,d:.085},{f:R.D4,d:.085},{f:R.E4,d:.17,h:R.E3},
+{f:R.C4,d:.085,h:R.C3},{f:R.E4,d:.085},{f:R.A4,d:.17,h:R.C3},{f:R.G4,d:.085},{f:R.F4,d:.085},{f:R.E4,d:.17,h:R.D3},{f:R.D4,d:.085},{f:R.C4,d:.085},{f:R.D4,d:.25,h:R.D3},
+]},
+{name:"Steel Hero",style:"Action Title",notes:[
+{f:R.A4,d:.075,h:R.A3},{f:R.C5,d:.075},{f:R.E5,d:.075,h:R.A3},{f:R.D5,d:.075},{f:R.C5,d:.15,h:R.F3},{f:R.A4,d:.075},{f:R.B4,d:.075},{f:R.C5,d:.15,h:R.G3},
+{f:R.D5,d:.075,h:R.D3},{f:R.E5,d:.075,h:R.D3},{f:R.D5,d:.075},{f:R.C5,d:.075},{f:R.B4,d:.15,h:R.G3},{f:R.A4,d:.075},{f:R.G4,d:.075},{f:R.A4,d:.15,h:R.A3},
+{f:R.A4,d:.075,h:R.A3},{f:R.C5,d:.075},{f:R.E5,d:.075,h:R.A3},{f:R.G5,d:.075},{f:R.E5,d:.075},{f:R.C5,d:.075},{f:R.A4,d:.075},{f:R.C5,d:.15,h:R.F3},
+{f:R.D5,d:.075,h:R.D3},{f:R.C5,d:.075,h:R.D3},{f:R.B4,d:.075},{f:R.A4,d:.075},{f:R.G4,d:.075},{f:R.A4,d:.075},{f:R.B4,d:.075},{f:R.C5,d:.22,h:R.C3},
+]},
+{name:"Sugar Rush",style:"Race Theme",notes:[
+{f:R.C5,d:.095,h:R.C3},{f:R.C5,d:.095},{f:R.G4,d:.095},{f:R.C5,d:.095},{f:R.E5,d:.095},{f:R.D5,d:.095},{f:R.C5,d:.19,h:R.G3},
+{f:R.D5,d:.095,h:R.D3},{f:R.D5,d:.095},{f:R.A4,d:.095},{f:R.D5,d:.095},{f:R.F5,d:.095},{f:R.E5,d:.095},{f:R.D5,d:.19,h:R.A3},
+{f:R.E5,d:.095,h:R.E3},{f:R.E5,d:.095},{f:R.B4,d:.095},{f:R.E5,d:.095},{f:R.G5,d:.095},{f:R.F5,d:.095},{f:R.E5,d:.19,h:R.B3},
+{f:R.F5,d:.095,h:R.F3},{f:R.E5,d:.095},{f:R.D5,d:.095},{f:R.C5,d:.095},{f:R.D5,d:.095},{f:R.E5,d:.095},{f:R.C5,d:.23,h:R.C3},
+]},
+{name:"First Steps",style:"Adventure Title",notes:[
+{f:R.G4,d:.16,h:R.G3},{f:R.B4,d:.16},{f:R.D5,d:.32,h:R.D4},{f:R.B4,d:.16},{f:R.G4,d:.16},
+{f:R.A4,d:.16,h:R.A3},{f:R.C5,d:.16},{f:R.E5,d:.32,h:R.E4},{f:R.C5,d:.16},{f:R.A4,d:.16},
+{f:R.D5,d:.16,h:R.D4},{f:R.B4,d:.16},{f:R.G4,d:.16},{f:R.A4,d:.16},{f:R.B4,d:.16},{f:R.D5,d:.32,h:R.D4},
+{f:R.G4,d:.16,h:R.G3},{f:R.E4,d:.16},{f:R.D4,d:.16},{f:R.E4,d:.16},{f:R.G4,d:.42,h:R.G3},
+]},
+];
+
+let mTm=[],cTrk=-1;
+function stopM(){mTm.forEach(t=>clearTimeout(t));mTm=[];G.playing=false;cTrk=-1}
+function schedTr(tk){if(!AC)return;let t=AC.currentTime+.02;tk.notes.forEach(n=>{if(n.f>0){tn(n.f,n.d,'square',.035,t);if(n.h)tn(n.h,n.d,'square',.018,t)}t+=n.d});const tot=tk.notes.reduce((s,n)=>s+n.d,0);mTm.push(setTimeout(()=>{if(G.playing)schedTr(tk)},tot*1000))}
+function togMus(i){if(G.playing&&cTrk===i){stopM();ren();return}stopM();initA();if(AC.state==='suspended')AC.resume();G.playing=true;cTrk=i;schedTr(trks[i]);if(!G.vTr.includes(i)){G.vTr.push(i);sv('vt',G.vTr)}ren()}
+
+// ═══════════════════════════════════════
+//  PIXEL ART SPRITES (8x8 each)
+// ═══════════════════════════════════════
+const SP={
+sword:['00010000','00011000','00011100','01111100','00011100','00011000','00010000','00000000'],
+shield:['01111100','11111110','11111111','11111111','11111111','11111111','01111110','00111100'],
+wand:['00010000','00010000','00010000','00110000','00110000','01010000','10000000','00000000'],
+bow:['10000000','11000000','11100000','11110000','11100000','11000000','10000000','00000000'],
+armor:['01111110','11111111','11011011','11000011','11011011','11111111','01111110','00000000'],
+helmet:['00111100','01111110','11111111','11011011','00000000','00000000','00000000','00000000'],
+boots:['00000000','00000000','11000000','11100000','11110000','01110000','00100000','00000000'],
+ring:['00000000','00111100','01000010','01000010','01000010','00111100','00000000','00000000'],
+lightning:['00011000','00110000','01100000','00110000','00011000','00001100','00011000','00000000'],
+sparkles:['00100100','00000000','11111111','00011000','11111111','00000000','00100100','00000000'],
+heart:['00000000','01100110','11111111','11111111','01111110','00111100','00011000','00000000'],
+potion:['00011000','00011000','00011000','00111100','00111100','01111110','01111110','00111100'],
+scroll:['00111100','00111100','01111110','01000010','01000010','01111110','00111100','00111100'],
+gem:['00011000','00111100','01111110','11111111','01111110','00111100','00011000','00000000'],
+star:['00011000','00011000','11111111','01111110','00111100','01100110','01100110','00000000'],
+bag:['00111100','00100100','01111110','11111111','11111111','11111111','01111110','00000000'],
+music:['00010000','00010000','00010000','00010000','00110000','01101000','01101000','00110000'],
+user:['00111100','01111110','01111110','00111100','00011000','01111110','01111110','01111110'],
+trophy:['00111100','01111110','01111110','00111100','00011000','00111100','01111110','00111100'],
+'dragon-gown':['00111111','01000001','10000001','10000010','10000010','10000001','01000001','00111110'],
+'gold-bracers':['00000000','11111111','11111111','00000000','00000000','11111111','11111111','00000000'],
+'feather-boots':['00000000','00001111','00011111','00111111','00111111','00011111','00001111','00000000'],
+'space-craft':['00011000','00111100','01111110','11111111','11111111','01111110','00111100','00011000'],
+'elevator':['01111110','10000001','10000001','10000001','10000001','10000001','10000001','01111110'],
+};
+const IM={'lucide:sword':'sword','lucide:swords':'sword','lucide:shield':'shield','lucide:wand-2':'wand','lucide:crosshair':'bow','lucide:shirt':'armor','lucide:hard-hat':'helmet','lucide:footprints':'boots','lucide:circle-dot':'ring','lucide:zap':'lightning','lucide:sparkles':'sparkles','lucide:heart':'heart','lucide:droplets':'potion','lucide:scroll':'scroll','lucide:gem':'gem','lucide:star':'star','lucide:flask-conical':'potion','lucide:shopping-bag':'bag','lucide:music':'music','lucide:user':'user','lucide:trophy':'trophy','img:red-dragon-gown':'dragon-gown','img:gold-ripbracers':'gold-bracers','img:feather-boots':'feather-boots','img:space-craft':'space-craft','img:elevator':'elevator'};
+function sp(k,p){const s=SP[k];if(!s)return '';return '<div style="display:inline-grid;grid-template-columns:repeat(8,'+p+'px);line-height:0">'+s.map(r=>r.split('').map(c=>'<div style="width:'+p+'px;height:'+p+'px;background:'+(c==='1'?'var(--p-bg)':'transparent')+'"></div>').join('')).join('')+'</div>'}
+function isp(it,p){if(it.img){return '<img src="'+it.img+'" style="width:'+(p||3)*8+'px;height:'+(p||3)*8+'px;image-rendering:pixelated">'}return sp(IM[it.icon]||'star',p||3)}
+
+// ═══════════════════════════════════════
+//  ITEM DATA — ★ EDIT YOUR ITEMS ★
+// ═══════════════════════════════════════
+const cats=[
+{name:"★ Featured",ic:"lucide:star",items:[]},
+{name:"Weapons",ic:"lucide:swords",items:[]},
+{name:"Armor",ic:"lucide:shield",items:[
+{name:"Red Dragon Gown",lv:66,atk:33,def:0,mag:0,spd:0,price:1000000,stock:2,img:"images/RedDragonGown.png"},
+{name:"Gold Rip Bracers",lv:56,atk:28,def:0,mag:0,spd:0,price:200000,stock:8,img:"images/Gold-ripBracers.png"},
+{name:"Feather Boots -2",lv:68,atk:0,def:0,mag:0,spd:34,price:1000000,stock:3,img:"images/FeatherBoots-2.png"},
+]},
+{name:"Special",ic:"lucide:gem",items:[]},
+{name:"Manufactures",ic:"lucide:flask-conical",items:[
+{name:"Space Craft",price:5000000,desc:"Special order basis only",img:"images/Space Craft.png"},
+{name:"Elevator",price:500000,desc:"Special order basis only",img:"images/Elevator.png"},
+]},
+];
+const gachaPool=[...cats[2].items,...cats[4].items];
+
+// ═══════════════════════════════════════
+//  PALETTES
+// ═══════════════════════════════════════
+const PAL=[{n:'Classic',bg:'#0f380f',dk:'#306230',lt:'#8bac0f',ltst:'#9bbc0f'},{n:'Pocket',bg:'#181818',dk:'#484848',lt:'#989898',ltst:'#c0c0c0'},{n:'Warm',bg:'#3d2200',dk:'#7a4400',lt:'#d48830',ltst:'#f0c060'}];
+function applyPal(i){const p=PAL[i],s=document.documentElement.style;s.setProperty('--p-bg',p.bg);s.setProperty('--p-dk',p.dk);s.setProperty('--p-lt',p.lt);s.setProperty('--p-ltst',p.ltst)}
+
+// ═══════════════════════════════════════
+//  ACHIEVEMENTS
+// ═══════════════════════════════════════
+const ACH=[
+{id:'boot',n:'First Boot',d:'Boot the Gameboy'},
+{id:'explore',n:'Shop Explorer',d:'Browse all 5 categories'},
+{id:'music',n:'Music Lover',d:'Listen to all 5 tracks'},
+{id:'social',n:'Social Butterfly',d:'Copy Discord name'},
+{id:'lucky',n:'Lucky Draw',d:'Win from Gacha'},
+{id:'hoard',n:'Hoarder',d:'Collect 5+ items'},
+{id:'palette',n:'Palette Master',d:'Try all 3 palettes'},
+{id:'secret',n:'Secret Finder',d:'Find the hidden code'},
+{id:'speed',n:'Speedrunner',d:'Visit all menu screens'},
+{id:'all',n:'Completionist',d:'Unlock 9 others'},
+];
+
+// ═══════════════════════════════════════
+//  STATE + LOCALSTORAGE
+// ═══════════════════════════════════════
+function ld(k,f){try{const v=localStorage.getItem('px_'+k);return v?JSON.parse(v):f}catch{return f}}
+function sv(k,v){try{localStorage.setItem('px_'+k,JSON.stringify(v))}catch{}}
+
+const G={
+scr:'start',cur:0,ci:0,ii:0,mi:0,playing:false,booted:false,
+pal:ld('pal',0),ach:ld('ach',{}),inv:ld('inv',[]),
+vCats:ld('vc',[]),vTr:ld('vt',[]),vScr:ld('vs',[]),vPal:ld('vp',[]),
+el:ld('el',0),
+gSt:'ready',gRes:null,
+cmpOn:false,cmpA:null,
+ordIt:null,
+};
+function save(){sv('pal',G.pal);sv('ach',G.ach);sv('inv',G.inv);sv('vc',G.vCats);sv('vt',G.vTr);sv('vs',G.vScr);sv('vp',G.vPal);sv('el',G.el)}
+function invN(){return G.inv.reduce((s,i)=>s+i.c,0)}
+function addInv(it){const e=G.inv.find(i=>i.n===it.name);if(e)e.c++;else G.inv.push({n:it.name,c:1});save()}
+function visitScr(n){if(!G.vScr.includes(n)){G.vScr.push(n);save()}}
+function visitCat(i){if(!G.vCats.includes(i)){G.vCats.push(i);save()}}
+
+function unlock(id){if(G.ach[id])return;const d=ACH.find(a=>a.id===id);if(!d)return;G.ach[id]=true;save();sfxAch();const p=document.getElementById('ach-popup');document.getElementById('ach-name').textContent=d.n;p.classList.remove('hidden');setTimeout(()=>p.classList.add('hidden'),2500);chkAch()}
+function chkAch(){
+if(G.vCats.length>=5)unlock('explore');
+if(G.vTr.length>=5)unlock('music');
+if(invN()>=5)unlock('hoard');
+if(G.vPal.length>=3)unlock('palette');
+if(G.vScr.length>=7)unlock('speed');
+if(Object.keys(G.ach).length>=9)unlock('all');
+}
+
+// ═══════════════════════════════════════
+//  KONAMI CODE
+// ═══════════════════════════════════════
+const KON=['up','up','down','down','left','right','left','right','b','a'];
+let kP=0;
+function trkKon(b){if(b===KON[kP]){kP++;if(kP===KON.length){kP=0;G.scr='secret';visitScr('secret');unlock('secret');ren()}}else if(kP>0&&b!==KON[0])kP=0;else kP=0}
+
+// ═══════════════════════════════════════
+//  RENDER HELPERS
+// ═══════════════════════════════════════
+function sb(l,v){const p=v<=0?0:Math.min(100,v/250*100);return '<div class="flex items-center gap-1"><span class="w-7 text-[11px] font-rt" style="color:var(--p-dk)">'+l+'</span><div class="flex-1 h-[7px] rounded-[1px] overflow-hidden" style="background:var(--p-dk)"><div class="h-full rounded-[1px]" style="width:'+p+'%;background:var(--p-bg)"></div></div><span class="w-8 text-right text-[11px] font-rt" style="color:var(--p-dk)">'+v+'</span></div>'}
+
+function slimeH(s){return '<div class="slime inline-block"><div style="width:'+(s*3)+'px;height:'+(s*2.5)+'px;background:var(--p-lt);border:2px solid var(--p-bg);border-radius:0 0 '+(s*2)+'px '+(s*2)+'px;position:relative"><div style="position:absolute;top:'+(s*.5)+'px;left:'+(s)+'px;width:'+(s*.5)+'px;height:'+(s*.5)+'px;background:var(--p-bg);border-radius:50%"></div><div style="position:absolute;top:'+(s*.5)+'px;right:'+(s)+'px;width:'+(s*.5)+'px;height:'+(s*.5)+'px;background:var(--p-bg);border-radius:50%"></div><div style="position:absolute;bottom:'+(s*.3)+'px;left:50%;transform:translateX(-50%);width:'+(s*1.2)+'px;height:'+(s*.4)+'px;background:var(--p-bg);border-radius:50%"></div></div></div>'}
+
+function itemStats(it){
+if(it.desc)return '<div class="font-rt text-[13px] text-center py-1" style="color:var(--p-dk)">'+it.desc+'</div>';
+const stats='<div class="font-rt text-[12px] mb-1" style="color:var(--p-dk)">LV. '+it.lv+'</div><div class="space-y-[3px] mb-1">'+sb('ATK',it.atk)+sb('DEF',it.def)+sb('MAG',it.mag)+sb('SPD',it.spd)+'</div>';
+const stock=it.stock!==undefined?'<div class="font-rt text-[10px] text-center" style="color:var(--p-lt)">Stock: '+it.stock+'</div>':'';
+return stats+stock;
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: START
+// ═══════════════════════════════════════
+function rStart(){
+return '<div class="h-full flex flex-col items-center justify-center">'+slimeH(5)+'<div class="font-px text-[11px] mt-3 mb-2 tracking-wide" style="color:var(--p-bg)">PIXEL SHOP</div><div class="font-rt text-lg blink" style="color:var(--p-dk)">Press START</div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: MAIN MENU
+// ═══════════════════════════════════════
+function rMain(){
+const mn=['ITEMS','GACHA','INVENTORY','MUSIC','ACHIEVE.','CONTACT'];
+const ic=['lucide:shopping-bag','lucide:sparkles','lucide:package','lucide:music','lucide:trophy','lucide:user'];
+const newBadge=!ld('seenItems',false)?' <span class="blink-fast text-[7px]" style="color:var(--p-lt)">NEW!</span>':'';
+const musN=G.playing?'<span class="note-anim inline-block text-xs ml-1" style="color:var(--p-bg)">♪</span>':'';
+const achC=Object.keys(G.ach).length;
+return '<div class="h-full flex flex-col"><div class="flex items-center gap-1.5 mb-2 pb-1.5 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦</span><span class="font-px text-[8px]" style="color:var(--p-bg)">PIXEL SHOP</span><span class="ml-auto font-rt text-[10px]" style="color:var(--p-dk)">'+PAL[G.pal].n+'</span></div><div class="flex-1 space-y-[3px] pt-1">'+mn.map((m,i)=>'<div class="flex items-center gap-2 px-2 py-[5px] rounded-sm '+(i===G.cur?'sr':'')+'"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(i===G.cur?'►':' ')+'</span><span class="iconify text-base" style="color:var(--p-bg)" data-icon="'+ic[i]+'"></span><span class="font-px text-[8px]" style="color:var(--p-bg)">'+m+'</span>'+(i===0?newBadge:'')+(i===3?musN:'')+(i===4&&achC>0?'<span class="font-rt text-[10px] ml-auto" style="color:var(--p-dk)">'+achC+'/10</span>':'')+'</div>').join('')+'</div><div class="flex items-center gap-1 pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="text-xs" style="color:var(--p-lt)">♥</span><span class="font-rt text-[10px] ml-1" style="color:var(--p-dk)">A=sel SEL=palette</span></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: ITEMS
+// ═══════════════════════════════════════
+function rItems(){
+const cat=cats[G.ci],it=cat.items[G.ii],n=cat.items.length;
+visitCat(G.ci);
+if(n===0)return '<div class="h-full flex flex-col items-center justify-center">'+slimeH(4)+'<div class="font-px text-[9px] mt-3 mb-2" style="color:var(--p-bg)">'+cat.name+'</div><div class="font-rt text-sm text-center" style="color:var(--p-dk)">No items in stock</div><div class="font-rt text-xs mt-2" style="color:var(--p-dk)">←→ to browse categories</div></div>';
+const cmp=G.cmpOn?' <span class="text-[9px]" style="color:var(--p-lt)">[1/2]</span>':'';
+return '<div class="h-full flex flex-col"><div class="flex items-center justify-between mb-1 pb-1 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[7px]" style="color:var(--p-bg)">◄ '+cat.name+' ►'+cmp+'</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">'+(G.ii+1)+'/'+n+'</span></div><div class="flex-1 flex flex-col items-center justify-center"><div class="gb-sunken w-16 h-16 flex items-center justify-center mb-2">'+isp(it,4)+'</div><div class="font-px text-[8px] mb-1.5 text-center leading-relaxed" style="color:var(--p-bg)">'+it.name+'</div>'+itemStats(it)+'<div class="font-px text-[9px] mt-2" style="color:var(--p-bg)">'+it.price+'G</div></div><div class="flex items-center justify-between pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="font-rt text-[10px]" style="color:var(--p-dk)">↑↓item ←→cat</span><span class="font-rt text-[10px]" style="color:var(--p-dk)">A=ord SEL=cmp</span></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: ORDER CONFIRM
+// ═══════════════════════════════════════
+function rOrderConf(){
+const it=G.ordIt;
+return '<div class="h-full flex flex-col items-center justify-center"><div class="gb-sunken w-16 h-16 flex items-center justify-center mb-2">'+isp(it,5)+'</div><div class="font-px text-[8px] mb-1 text-center" style="color:var(--p-bg)">'+it.name+'</div><div class="font-px text-[9px] mb-3" style="color:var(--p-bg)">'+it.price+'G</div><div class="font-rt text-base mb-4" style="color:var(--p-dk)">Order this item?</div><div class="flex gap-8"><div class="text-center"><div class="ab-circle mb-1 mx-auto"><span class="font-px text-[7px]" style="color:var(--p-bg)">A</span></div><span class="font-rt text-[10px]" style="color:var(--p-dk)">Yes</span></div><div class="text-center"><div class="ab-circle mb-1 mx-auto"><span class="font-px text-[7px]" style="color:var(--p-bg)">B</span></div><span class="font-rt text-[10px]" style="color:var(--p-dk)">No</span></div></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: ORDER SENT
+// ═══════════════════════════════════════
+function rOrderSent(){
+return '<div class="h-full flex flex-col items-center justify-center">'+slimeH(3)+'<div class="font-px text-[9px] mt-3 mb-2" style="color:var(--p-bg)">ORDER SENT!</div><div class="font-rt text-base text-center" style="color:var(--p-dk)">Please DM me on Discord<br>to complete your order.</div><div class="font-rt text-sm mt-4 blink" style="color:var(--p-dk)">Press any button...</div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: GACHA
+// ═══════════════════════════════════════
+function rGacha(){
+if(G.gSt==='spinning'){
+return '<div class="h-full flex flex-col items-center justify-center"><div class="font-px text-[9px] mb-4" style="color:var(--p-bg)">SPINNING...</div><div class="gb-sunken w-20 h-20 flex items-center justify-center">'+(G.gRes?isp(G.gRes,5):'')+'</div><div class="font-rt text-sm mt-4 blink-fast" style="color:var(--p-dk)">Good luck!</div></div>';
+}
+if(G.gSt==='result'){
+const r=G.gRes;
+return '<div class="h-full flex flex-col"><div class="flex items-center gap-1.5 mb-2 pb-1 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦</span><span class="font-px text-[8px]" style="color:var(--p-bg)">GACHA RESULT</span></div><div class="flex-1 flex flex-col items-center justify-center"><div class="gb-sunken w-16 h-16 flex items-center justify-center mb-2">'+isp(r,5)+'</div><div class="font-px text-[8px] mb-1.5 text-center" style="color:var(--p-bg)">'+r.name+'</div>'+(r.desc?'<div class="font-rt text-[12px] text-center" style="color:var(--p-dk)">'+r.desc+'</div>':('<div class="font-rt text-[11px] mb-1" style="color:var(--p-dk)">LV. '+r.lv+'</div>'+sb('ATK',r.atk)+sb('DEF',r.def)+sb('MAG',r.mag)+sb('SPD',r.spd)))+'<div class="font-px text-[9px] mt-2" style="color:var(--p-bg)">'+r.price+'G</div></div><div class="flex items-center justify-center gap-8 pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="font-rt text-[11px]" style="color:var(--p-dk)">A = KEEP</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">B = NO</span></div></div>';
+}
+if(G.gSt==='flash'){
+return '<div class="h-full flex flex-col items-center justify-center">'+isp(G.gRes,5)+'<div class="font-px text-[9px] mt-3 mb-1" style="color:var(--p-bg)">YOU GOT!</div><div class="font-rt text-lg" style="color:var(--p-dk)">'+G.gRes.name+'</div></div>';
+}
+return '<div class="h-full flex flex-col items-center justify-center">'+sp('star',5)+'<div class="font-px text-[9px] mt-3 mb-2" style="color:var(--p-bg)">GACHA</div><div class="font-rt text-base mb-1 text-center" style="color:var(--p-dk)">Try your luck!</div><div class="font-rt text-sm text-center mb-4" style="color:var(--p-dk)">Win a random item.</div><div class="font-rt text-base blink" style="color:var(--p-dk)">Press A to spin</div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: INVENTORY
+// ═══════════════════════════════════════
+function rInv(){
+if(G.inv.length===0)return '<div class="h-full flex flex-col items-center justify-center">'+slimeH(3)+'<div class="font-rt text-lg mt-3 mb-1" style="color:var(--p-dk)">No items yet!</div><div class="font-rt text-sm text-center" style="color:var(--p-dk)">Browse the shop or<br>try the Gacha.</div></div>';
+const n=G.inv.length,c=Math.min(G.cur,n-1);
+const allItems=cats.flatMap(c=>c.items);
+return '<div class="h-full flex flex-col" style="overflow:hidden"><div class="flex items-center justify-between mb-1 pb-1 border-b-2 flex-shrink-0" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦ INVENTORY</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">'+invN()+' items</span></div><div class="flex-1 overflow-y-auto" style="min-height:0">'+G.inv.map((it,i)=>{const fd=allItems.find(x=>x.name===it.n);return '<div class="flex items-center gap-2 px-2 py-[4px] rounded-sm '+(i===c?'sr':'')+'"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(i===c?'►':' ')+'</span><div class="w-6 h-6 flex items-center justify-center">'+(fd?isp(fd,2):'')+'</div><span class="font-rt text-[13px] flex-1 truncate" style="color:var(--p-bg)">'+it.n+'</span><span class="font-rt text-[12px]" style="color:var(--p-dk)">x'+it.c+'</span></div>'}).join('')+'</div><div class="pt-1 border-t-2 flex-shrink-0" style="border-color:var(--p-dk)"><div class="font-rt text-[10px] text-center" style="color:var(--p-dk)">B = back | A = checkout</div></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: MUSIC (fixed scroll)
+// ═══════════════════════════════════════
+function rMusic(){
+const ip=G.playing&&cTrk===G.mi;
+const bars=ip?'<div class="flex items-end justify-center gap-[2px] h-4 mb-1">'+[0,1,2,3,4].map(i=>'<div class="w-[3px] wave-bar" style="background:var(--p-bg);animation-delay:'+i*.12+'s"></div>').join('')+'</div>':'<div class="h-5 mb-1"></div>';
+return '<div class="h-full flex flex-col" style="overflow:hidden"><div class="flex items-center gap-1.5 mb-1 pb-1.5 border-b-2 flex-shrink-0" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦</span><span class="font-px text-[8px]" style="color:var(--p-bg)">MUSIC PLAYER</span></div>'+bars+'<div class="flex-1 overflow-y-auto" style="min-height:0">'+trks.map((t,i)=>{const a=i===G.mi;return '<div class="flex items-center gap-2 px-2 py-[5px] rounded-sm '+(a?'sr':'')+'"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(a?'►':' ')+'</span><div class="flex-1 min-w-0"><div class="font-rt text-[13px] truncate" style="color:var(--p-bg)">'+t.name+'</div><div class="font-rt text-[10px]" style="color:var(--p-dk)">'+t.style+'</div></div>'+(ip&&a?'<span class="note-anim text-sm flex-shrink-0" style="color:var(--p-bg)">♪♫</span>':'')+'</div>'}).join('')+'</div><div class="pt-1.5 border-t-2 space-y-0.5 flex-shrink-0" style="border-color:var(--p-dk)"><div class="font-rt text-[11px] text-center" style="color:var(--p-dk)">'+(ip?'Now playing: '+trks[G.mi].name:'Select a track')+'</div><div class="font-rt text-[10px] text-center" style="color:var(--p-dk)">A = '+(ip?'STOP':'PLAY')+' | B = back</div></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: ACHIEVEMENTS (fixed scroll)
+// ═══════════════════════════════════════
+function rAch(){
+const c=Object.keys(G.ach).length;
+return '<div class="h-full flex flex-col" style="overflow:hidden"><div class="flex items-center justify-between mb-1 pb-1 border-b-2 flex-shrink-0" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦ ACHIEVEMENTS</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">'+c+'/10</span></div><div class="flex-1 overflow-y-auto" style="min-height:0">'+ACH.map((a,i)=>{const u=!!G.ach[a.id];const sel=i===G.cur;return '<div class="flex items-center gap-2 px-2 py-[4px] rounded-sm '+(sel?'sr':'')+'"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(sel?'►':' ')+'</span><span class="font-px text-[8px]" style="color:'+(u?'var(--p-bg)':'var(--p-dk)')+'">'+(u?'★':'☆')+'</span><div class="flex-1 min-w-0"><div class="font-rt text-[13px] truncate" style="color:'+(u?'var(--p-bg)':'var(--p-dk)')+'">'+(u?a.n:'???')+'</div>'+(u?'<div class="font-rt text-[10px]" style="color:var(--p-dk)">'+a.d+'</div>':'')+'</div></div>'}).join('')+'</div><div class="pt-1 border-t-2 flex-shrink-0" style="border-color:var(--p-dk)"><div class="font-rt text-[10px] text-center" style="color:var(--p-dk)">B = back</div></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: CONTACT
+// ═══════════════════════════════════════
+function rContact(){
+const lines=[{l:'IGN',v:'Miyuki',cp:true},{l:'Server',v:'WLO Safe Haven',cp:false},{l:'Discord',v:'veririsky_722',cp:true}];
+return '<div class="h-full flex flex-col"><div class="flex items-center gap-1.5 mb-2 pb-1.5 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦</span><span class="font-px text-[8px]" style="color:var(--p-bg)">CONTACT</span></div><div class="flex-1 space-y-2 pt-2">'+lines.map((ln,i)=>{const sel=i===G.cur;return '<div class="px-2 py-1 rounded-sm '+(sel?'sr':'')+'"><div class="flex items-center gap-1 mb-0.5"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(sel?'►':' ')+'</span><span class="font-px text-[7px]" style="color:var(--p-dk)">'+ln.l+'</span>'+(ln.cp&&sel?'<span class="font-rt text-[10px] ml-auto" style="color:var(--p-lt)">A=copy</span>':'')+'</div><div class="font-rt text-[15px] pl-4" style="color:var(--p-bg)">'+ln.v+'</div></div>'}).join('')+'</div><div class="pt-1.5 border-t-2 font-rt text-[10px] text-center" style="border-color:var(--p-dk);color:var(--p-dk)">Join Discord below! | B = back</div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: COMPARE
+// ═══════════════════════════════════════
+function rCompare(){
+const a=cats[G.cmpA.ci].items[G.cmpA.ii],b=cats[G.ci].items[G.ii];
+const isAc=!!a.desc,isBc=!!b.desc;
+if(isAc||isBc){
+return '<div class="h-full flex flex-col items-center justify-center"><div class="font-rt text-sm text-center mb-2" style="color:var(--p-dk)">Cannot compare consumables</div><div class="font-rt text-sm blink" style="color:var(--p-dk)">Press B to go back</div></div>';
+}
+const sl=(l,va,vb)=>{const ha=va>=vb,hb=vb>va;return '<div class="flex items-center gap-1"><span class="w-7 text-[10px] font-rt" style="color:var(--p-dk)">'+l+'</span><span class="w-8 text-right text-[12px] font-rt" style="color:'+(ha?'var(--p-bg)':'var(--p-dk)')+'">'+va+'</span><span class="w-4 text-center text-[10px] font-rt" style="color:var(--p-dk)">vs</span><span class="w-8 text-left text-[12px] font-rt" style="color:'+(hb?'var(--p-bg)':'var(--p-dk)')+'">'+vb+'</span></div>'};
+return '<div class="h-full flex flex-col"><div class="flex items-center justify-between mb-1 pb-1 border-b-2" style="border-color:var(--p-dk)"><div class="flex items-center gap-1">'+isp(a,2)+'<span class="font-px text-[7px]" style="color:var(--p-bg)">'+a.name+'</span></div><span class="font-px text-[8px]" style="color:var(--p-lt)">VS</span><div class="flex items-center gap-1"><span class="font-px text-[7px]" style="color:var(--p-bg)">'+b.name+'</span>'+isp(b,2)+'</div></div><div class="flex justify-between mb-1 px-2"><span class="font-rt text-[10px]" style="color:var(--p-dk)">LV.'+a.lv+'</span><span class="font-rt text-[10px]" style="color:var(--p-dk)">LV.'+b.lv+'</span></div><div class="flex-1 flex flex-col justify-center space-y-[3px] px-2">'+sl('ATK',a.atk,b.atk)+sl('DEF',a.def,b.def)+sl('MAG',a.mag,b.mag)+sl('SPD',a.spd,b.spd)+'</div><div class="flex justify-between pt-1 border-t-2 px-2" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">'+a.price+'G</span><span class="font-rt text-[10px]" style="color:var(--p-dk)">B = back</span><span class="font-px text-[8px]" style="color:var(--p-bg)">'+b.price+'G</span></div></div>';
+}
+
+// ═══════════════════════════════════════
+//  SCREEN: SECRET (Konami)
+// ═══════════════════════════════════════
+function rSecret(){
+return '<div class="h-full flex flex-col items-center justify-center">'+sp('trophy',5)+'<div class="font-px text-[9px] mt-3 mb-2" style="color:var(--p-bg)">SECRET FOUND!</div><div class="font-rt text-base text-center mb-2" style="color:var(--p-dk)">You entered the legendary<br>Konami Code!</div><div class="font-rt text-sm text-center mb-3" style="color:var(--p-dk)">You are a true gamer. ♥</div>'+slimeH(4)+'</div>';
+}
+
+// ═══════════════════════════════════════
+//  MASTER RENDER
+// ═══════════════════════════════════════
+function ren(){
+const el=document.getElementById('scr');
+if(!el)return;
+let h='';
+switch(G.scr){
+case 'start':h=rStart();break;
+case 'main':h=rMain();break;
+case 'items':h=rItems();break;
+case 'orderconf':h=rOrderConf();break;
+case 'ordersent':h=rOrderSent();break;
+case 'gacha':h=rGacha();break;
+case 'inventory':h=rInv();break;
+case 'music':h=rMusic();break;
+case 'achieve':h=rAch();break;
+case 'contact':h=rContact();break;
+case 'compare':h=rCompare();break;
+case 'secret':h=rSecret();break;
+default:h=rStart();
+}
+el.innerHTML=h;
+if(window.Iconify&&Iconify.scan)Iconify.scan(el);
+}
+
+// ═══════════════════════════════════════
+//  INPUT HANDLER
+// ═══════════════════════════════════════
+function inp(b){
+initA();if(AC&&AC.state==='suspended')AC.resume();
+trkKon(b);
+
+switch(G.scr){
+case 'start':
+if(b==='start'||b==='a')beginBoot();
+break;
+
+case 'main':{
+const n=6;
+if(b==='up'){G.cur=(G.cur+n-1)%n;sfxM()}
+if(b==='down'){G.cur=(G.cur+1)%n;sfxM()}
+if(b==='select'){
+G.pal=(G.pal+1)%PAL.length;
+if(!G.vPal.includes(G.pal))G.vPal.push(G.pal);
+applyPal(G.pal);save();sfxM();chkAch();
+}
+if(b==='a'){
+sfxS();
+const screens=['items','gacha','inventory','music','achieve','contact'];
+G.scr=screens[G.cur];G.cur=0;
+if(G.scr==='items'){G.ci=0;G.ii=0;sv('seenItems',true)}
+if(G.scr==='music')G.mi=0;
+visitScr(G.scr);chkAch();
+}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+}
+
+case 'items':{
+const cat=cats[G.ci],n=cat.items.length;
+if(b==='up'){G.ii=(G.ii+n-1)%n;sfxM()}
+if(b==='down'){G.ii=(G.ii+1)%n;sfxM()}
+if(b==='left'){G.ci=(G.ci+cats.length-1)%cats.length;G.ii=0;sfxM()}
+if(b==='right'){G.ci=(G.ci+1)%cats.length;G.ii=0;sfxM()}
+if(b==='select'){
+if(!G.cmpOn){G.cmpOn=true;G.cmpA={ci:G.ci,ii:G.ii};sfxM()}
+else{
+if(G.ci===G.cmpA.ci&&G.ii===G.cmpA.ii){sfxM()}
+else{G.scr='compare';sfxS()}
+}
+}
+if(b==='a'){G.ordIt=cat.items[G.ii];G.scr='orderconf';sfxS()}
+if(b==='b'){
+if(G.cmpOn){G.cmpOn=false;G.cmpA=null;sfxB()}
+else{sfxB();G.scr='main';G.cur=0}
+}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+}
+
+case 'orderconf':
+if(b==='a'){sfxOrd();addInv(G.ordIt);openModal(G.ordIt);G.scr='ordersent';chkAch()}
+if(b==='b'){G.ordIt=null;G.scr='items';sfxB()}
+break;
+
+case 'ordersent':
+G.ordIt=null;G.scr='items';G.cmpOn=false;G.cmpA=null;sfxM();
+break;
+
+case 'gacha':
+if(G.gSt==='ready'&&b==='a'){
+G.gSt='spinning';sfxGacha();ren();
+let cnt=0;
+const iv=setInterval(()=>{
+G.gRes=gachaPool[Math.floor(Math.random()*gachaPool.length)];cnt++;
+if(cnt>=10){clearInterval(iv);G.gSt='result';ren()}
+else ren();
+},150);
+}
+if(G.gSt==='result'&&b==='a'){
+addInv(G.gRes);G.gSt='flash';sfxS();chkAch();ren();
+setTimeout(()=>{G.gRes=null;G.gSt='ready';ren()},1800);
+}
+if(G.gSt==='result'&&b==='b'){G.gRes=null;G.gSt='ready';sfxB()}
+if(b==='b'&&G.gSt==='ready'){sfxB();G.scr='main';G.cur=1}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+
+case 'inventory':{
+const n=Math.max(1,G.inv.length);
+if(b==='up'){G.cur=(G.cur+n-1)%n;sfxM()}
+if(b==='down'){G.cur=(G.cur+1)%n;sfxM()}
+if(b==='a'&&G.inv.length>0){
+const it=G.inv[G.cur];
+const allItems=cats.flatMap(c=>c.items);
+const fd=allItems.find(x=>x.name===it.n);
+if(fd){G.ordIt=fd;G.scr='orderconf';sfxS()}
+else{G.scr='ordersent';sfxOrd()}
+}
+if(b==='b'){sfxB();G.scr='main';G.cur=2}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+}
+
+case 'music':
+if(b==='up'){G.mi=(G.mi+trks.length-1)%trks.length;sfxM()}
+if(b==='down'){G.mi=(G.mi+1)%trks.length;sfxM()}
+if(b==='a'){togMus(G.mi);sfxS()}
+if(b==='b'){sfxB();G.scr='main';G.cur=3}
+if(b==='start'&&G.playing){stopM();sfxB();ren();return}
+break;
+
+case 'achieve':{
+const n=ACH.length;
+if(b==='up'){G.cur=(G.cur+n-1)%n;sfxM()}
+if(b==='down'){G.cur=(G.cur+1)%n;sfxM()}
+if(b==='b'){sfxB();G.scr='main';G.cur=4}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+}
+
+case 'contact':{
+const n=3;
+if(b==='up'){G.cur=(G.cur+n-1)%n;sfxM()}
+if(b==='down'){G.cur=(G.cur+1)%n;sfxM()}
+if(b==='a'){
+const vals=['Miyuki','WLO Safe Haven','veririsky_722'];
+const cps=[true,false,true];
+if(cps[G.cur]){cp(vals[G.cur]);sfxCp();if(G.cur===2)unlock('social')}else sfxM();
+}
+if(b==='b'){sfxB();G.scr='main';G.cur=5}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+}
+
+case 'compare':
+if(b==='b'){G.cmpOn=false;G.cmpA=null;G.scr='items';sfxB()}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+
+case 'secret':
+G.scr='main';G.cur=0;sfxM();
+break;
+}
+ren();
+}
+
+// ═══════════════════════════════════════
+//  KEYBOARD
+// ═══════════════════════════════════════
+document.addEventListener('keydown',e=>{
+const bootEl=document.getElementById('boot-screen');
+if(bootEl&&bootEl.style.display!=='none'&&G.scr==='start'){
+if(e.key===' '||e.key==='Enter'){e.preventDefault();beginBoot();return}
+}
+const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',z:'a',Z:'a',x:'b',X:'b',Enter:'a',Backspace:'b'};
+if(map[e.key]){e.preventDefault();inp(map[e.key]);return}
+if(e.key===' '){e.preventDefault();inp('start');return}
+if(e.key==='Escape'){e.preventDefault();clModal()}
+});
+
+document.getElementById('boot-screen').addEventListener('click',beginBoot);
+
+// ═══════════════════════════════════════
+//  ORDER MODAL
+// ═══════════════════════════════════════
+function openModal(it){
+const m=document.getElementById('order-modal');
+const ic=!!it.desc;
+document.getElementById('mn').textContent=it.name;
+document.getElementById('ml').textContent=ic?'Consumable':'LV. '+it.lv;
+document.getElementById('mi').innerHTML=isp(it,4);
+document.getElementById('mp').textContent=it.price+'G';
+const se=document.getElementById('ms');
+if(ic){se.innerHTML='<div class="gb-sunken px-3 py-2 text-center font-rt text-lg" style="color:var(--p-bg)">'+it.desc+'</div>'}
+else{se.innerHTML='<div class="space-y-1.5">'+[['ATK',it.atk],['DEF',it.def],['MAG',it.mag],['SPD',it.spd]].map(([l,v])=>{const p=v<=0?0:Math.min(100,v/250*100);return '<div class="flex items-center gap-2 text-sm"><span class="w-7 font-rt" style="color:var(--p-dk)">'+l+'</span><div class="flex-1 h-2 overflow-hidden" style="background:var(--p-dk)"><div class="h-full" style="width:'+p+'%;background:var(--p-bg)"></div></div><span class="w-8 text-right font-rt" style="color:var(--p-dk)">'+v+'</span></div>'}).join('')+'</div>'}
+m.classList.remove('hidden');document.body.style.overflow='hidden';
+if(window.Iconify&&Iconify.scan)Iconify.scan(m);
+}
+
+function clModal(){document.getElementById('order-modal').classList.add('hidden');document.body.style.overflow=''}
+
+// ═══════════════════════════════════════
+//  CLIPBOARD / TOAST
+// ═══════════════════════════════════════
+function cp(t){navigator.clipboard.writeText(t).then(()=>toast('Copied: '+t)).catch(()=>toast('Copied: '+t))}
+function toast(m){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2000)}
+
+// ═══════════════════════════════════════
+//  BOOT SEQUENCE
+// ═══════════════════════════════════════
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function typeEl(el,t,s){for(let i=0;i<t.length;i++){el.textContent+=t[i];await wait(s)}}
+
+async function beginBoot(){
+if(G.booted)return;G.booted=true;
+initA();if(AC&&AC.state==='suspended')AC.resume();
+const boot=document.getElementById('boot-screen'),led=document.getElementById('boot-led'),lines=document.getElementById('boot-lines'),text=document.getElementById('boot-text'),label=document.getElementById('boot-label'),prompt=document.getElementById('boot-prompt');
+prompt.style.display='none';sfxBoot();
+await wait(300);led.style.opacity='1';await wait(200);label.style.opacity='1';await wait(300);
+lines.style.opacity='1';lines.style.height='100%';await wait(1100);
+lines.style.opacity='0';await wait(350);
+text.style.opacity='1';await typeEl(text,'PIXEL SHOP',110);await wait(800);
+boot.style.transition='opacity .6s ease';boot.style.opacity='0';await wait(600);boot.style.display='none';
+const main=document.getElementById('main-content');main.classList.remove('hidden');requestAnimationFrame(()=>{main.style.opacity='1'});
+G.scr='main';unlock('boot');ren();startTimer();
+}
+
+// ═══════════════════════════════════════
+//  PLAYTIME TIMER
+// ═══════════════════════════════════════
+let timerStarted=false;
+function startTimer(){if(timerStarted)return;timerStarted=true;
+setInterval(()=>{G.el++;sv('el',G.el);updTime()},1000);
+}
+function updTime(){
+const m=Math.floor(G.el/60),s=G.el%60;
+const el=document.getElementById('playtime');
+if(el)el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+// ═══════════════════════════════════════
+//  FLOATING PIXELS
+// ═══════════════════════════════════════
+function mkPixels(){for(let i=0;i<5;i++){const p=document.createElement('div');p.className='float-pixel';p.style.left=(10+Math.random()*80)+'%';p.style.bottom='-10px';p.style.animation='float-up '+(18+Math.random()*22)+'s linear infinite';p.style.animationDelay=(Math.random()*18)+'s';document.body.appendChild(p)}}
+
+// ═══════════════════════════════════════
+//  SMOOTH SCROLL
+// ═══════════════════════════════════════
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+a.addEventListener('click',e=>{
+e.preventDefault();const h=a.getAttribute('href');
+if(!h||h.length<=1){window.scrollTo({top:0,behavior:'smooth'});return}
+const t=document.querySelector(h);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+});
+});
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+applyPal(G.pal);
+mkPixels();
+updTime();
+ren();
+</script>
+</body>
+</html>

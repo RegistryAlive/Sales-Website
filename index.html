@@ -50,11 +50,14 @@
     @keyframes slide-up{from{transform:translate(-50%,-50%) scale(.9);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}.modal-enter{animation:slide-up .25s ease-out}
     .sr{background:var(--p-dk)}
     @keyframes waveform{0%,100%{height:4px}50%{height:14px}}.wave-bar{animation:waveform .6s ease-in-out infinite}
-    @keyframes ach-pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}.ach-pop{animation:ach-pop .5s ease-out}
-    </style>
+@keyframes ach-pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}.ach-pop{animation:ach-pop .5s ease-out}
+     @keyframes stock-pulse{0%,100%{color:var(--p-lt);text-shadow:none}50%{color:var(--p-ltst);text-shadow:0 0 8px var(--p-lt)}}.stock-anim{animation:stock-pulse 1.5s ease-in-out infinite}
+     @keyframes stock-flash{0%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.9}100%{transform:scale(1);opacity:1}}.stock-flash{animation:stock-flash .6s ease-in-out}
+     </style>
 </head>
 <body class="bg-gb-bg text-gb-ltst scanlines overflow-x-hidden">
 
+<div id="mode-notif" class="hidden fixed bottom-20 right-4 z-[400] gb-card px-3 py-1.5 font-px text-[7px] text-gb-bg transition-opacity duration-300">BUY MODE</div>
 <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] gb-card px-4 py-2 font-px text-[8px] text-gb-bg flex items-center gap-2">
 <span class="iconify text-gb-lt" data-icon="lucide:check"></span><span id="toast-msg">Copied!</span>
 </div>
@@ -300,6 +303,7 @@ const cats=[
 {name:"Manufactures",ic:"lucide:flask-conical",items:[
 {name:"Space Craft",price:5000000,desc:"Special order basis only",img:"images/Space Craft.png"},
 {name:"Elevator",price:500000,desc:"Special order basis only",img:"images/Elevator.png"},
+{name:"Fortune Egg",price:300000,desc:"Made to order only",img:"images/Fortune Egg.png"},
 ]},
 ];
 const gachaPool=[...cats[2].items,...cats[4].items];
@@ -340,8 +344,11 @@ el:ld('el',0),
 gSt:'ready',gRes:null,
 cmpOn:false,cmpA:null,
 ordIt:null,
+itemsMode:ld('mode','buy'),
+wishList:[{name:"Alchemy Book 4",price:75000,img:"images/Alchemy Book 4.png"}],
+seenStock:ld('seenStock',{}),
 };
-function save(){sv('pal',G.pal);sv('ach',G.ach);sv('inv',G.inv);sv('vc',G.vCats);sv('vt',G.vTr);sv('vs',G.vScr);sv('vp',G.vPal);sv('el',G.el)}
+function save(){sv('pal',G.pal);sv('ach',G.ach);sv('inv',G.inv);sv('vc',G.vCats);sv('vt',G.vTr);sv('vs',G.vScr);sv('vp',G.vPal);sv('el',G.el);sv('seenStock',G.seenStock);sv('mode',G.itemsMode)}
 function invN(){return G.inv.reduce((s,i)=>s+i.c,0)}
 function addInv(it){const e=G.inv.find(i=>i.n===it.name);if(e)e.c++;else G.inv.push({n:it.name,c:1});save()}
 function visitScr(n){if(!G.vScr.includes(n)){G.vScr.push(n);save()}}
@@ -374,8 +381,15 @@ function slimeH(s){return '<div class="slime inline-block"><div style="width:'+(
 function itemStats(it){
 if(it.desc)return '<div class="font-rt text-[13px] text-center py-1" style="color:var(--p-dk)">'+it.desc+'</div>';
 const stats='<div class="font-rt text-[12px] mb-1" style="color:var(--p-dk)">LV. '+it.lv+'</div><div class="space-y-[3px] mb-1">'+sb('ATK',it.atk)+sb('DEF',it.def)+sb('MAG',it.mag)+sb('SPD',it.spd)+'</div>';
-const stock=it.stock!==undefined?'<div class="font-rt text-[10px] text-center" style="color:var(--p-lt)">Stock: '+it.stock+'</div>':'';
-return stats+stock;
+if(it.stock!==undefined){
+const key=it.name;
+if(!G.seenStock[key]){
+G.seenStock[key]=true;save();
+return stats+'<div class="font-rt text-[10px] text-center stock-flash" style="color:var(--p-lt)">Stock: '+it.stock+'</div>';
+}
+return stats+'<div class="font-rt text-[10px] text-center stock-anim" style="color:var(--p-lt)">Stock: '+it.stock+'</div>';
+}
+return stats;
 }
 
 // ═══════════════════════════════════════
@@ -394,18 +408,27 @@ const ic=['lucide:shopping-bag','lucide:sparkles','lucide:package','lucide:music
 const newBadge=!ld('seenItems',false)?' <span class="blink-fast text-[7px]" style="color:var(--p-lt)">NEW!</span>':'';
 const musN=G.playing?'<span class="note-anim inline-block text-xs ml-1" style="color:var(--p-bg)">♪</span>':'';
 const achC=Object.keys(G.ach).length;
-return '<div class="h-full flex flex-col"><div class="flex items-center gap-1.5 mb-2 pb-1.5 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦</span><span class="font-px text-[8px]" style="color:var(--p-bg)">PIXEL SHOP</span><span class="ml-auto font-rt text-[10px]" style="color:var(--p-dk)">'+PAL[G.pal].n+'</span></div><div class="flex-1 space-y-[3px] pt-1">'+mn.map((m,i)=>'<div class="flex items-center gap-2 px-2 py-[5px] rounded-sm '+(i===G.cur?'sr':'')+'"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(i===G.cur?'►':' ')+'</span><span class="iconify text-base" style="color:var(--p-bg)" data-icon="'+ic[i]+'"></span><span class="font-px text-[8px]" style="color:var(--p-bg)">'+m+'</span>'+(i===0?newBadge:'')+(i===3?musN:'')+(i===4&&achC>0?'<span class="font-rt text-[10px] ml-auto" style="color:var(--p-dk)">'+achC+'/10</span>':'')+'</div>').join('')+'</div><div class="flex items-center gap-1 pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="text-xs" style="color:var(--p-lt)">♥</span><span class="font-rt text-[10px] ml-1" style="color:var(--p-dk)">A=sel SEL=palette</span></div></div>';
+const itemsSub=G.cur===0?'<div class="font-rt text-[9px] ml-auto" style="color:var(--p-dk)">'+G.itemsMode.toUpperCase()+'</div>':'';
+return '<div class="h-full flex flex-col"><div class="flex items-center gap-1.5 mb-2 pb-1.5 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[8px]" style="color:var(--p-bg)">♦</span><span class="font-px text-[8px]" style="color:var(--p-bg)">PIXEL SHOP</span><span class="ml-auto font-rt text-[10px]" style="color:var(--p-dk)">'+PAL[G.pal].n+'</span></div><div class="flex-1 space-y-[3px] pt-1">'+mn.map((m,i)=>'<div class="flex items-center gap-2 px-2 py-[5px] rounded-sm '+(i===G.cur?'sr':'')+'"><span class="text-xs font-rt w-3" style="color:var(--p-bg)">'+(i===G.cur?'►':' ')+'</span><span class="iconify text-base" style="color:var(--p-bg)" data-icon="'+ic[i]+'"></span><span class="font-px text-[8px]" style="color:var(--p-bg)">'+m+'</span>'+(i===0?newBadge:'')+(i===3?musN:'')+(i===4&&achC>0?'<span class="font-rt text-[10px] ml-auto" style="color:var(--p-dk)">'+achC+'/10</span>':'')+'</div>').join('')+'</div><div class="flex items-center gap-1 pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="text-xs" style="color:var(--p-lt)">♥</span><span class="font-rt text-[10px] ml-1" style="color:var(--p-dk)">A=sel SEL=palette</span>'+itemsSub+'</div></div>';
 }
 
 // ═══════════════════════════════════════
 //  SCREEN: ITEMS
 // ═══════════════════════════════════════
 function rItems(){
+if(G.itemsMode==='sell'){
 const cat=cats[G.ci],it=cat.items[G.ii],n=cat.items.length;
 visitCat(G.ci);
 if(n===0)return '<div class="h-full flex flex-col items-center justify-center">'+slimeH(4)+'<div class="font-px text-[9px] mt-3 mb-2" style="color:var(--p-bg)">'+cat.name+'</div><div class="font-rt text-sm text-center" style="color:var(--p-dk)">No items in stock</div><div class="font-rt text-xs mt-2" style="color:var(--p-dk)">←→ to browse categories</div></div>';
 const cmp=G.cmpOn?' <span class="text-[9px]" style="color:var(--p-lt)">[1/2]</span>':'';
-return '<div class="h-full flex flex-col"><div class="flex items-center justify-between mb-1 pb-1 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[7px]" style="color:var(--p-bg)">◄ '+cat.name+' ►'+cmp+'</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">'+(G.ii+1)+'/'+n+'</span></div><div class="flex-1 flex flex-col items-center justify-center"><div class="gb-sunken w-16 h-16 flex items-center justify-center mb-2">'+isp(it,4)+'</div><div class="font-px text-[8px] mb-1.5 text-center leading-relaxed" style="color:var(--p-bg)">'+it.name+'</div>'+itemStats(it)+'<div class="font-px text-[9px] mt-2" style="color:var(--p-bg)">'+it.price+'G</div></div><div class="flex items-center justify-between pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="font-rt text-[10px]" style="color:var(--p-dk)">↑↓item ←→cat</span><span class="font-rt text-[10px]" style="color:var(--p-dk)">A=ord SEL=cmp</span></div></div>';
+return '<div class="h-full flex flex-col"><div class="flex items-center justify-between mb-1 pb-1 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[7px]" style="color:var(--p-bg)">◄ '+cat.name+' ►'+cmp+'</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">'+(G.ii+1)+'/'+n+'</span></div><div class="flex-1 flex flex-col items-center justify-center"><div class="gb-sunken w-16 h-16 flex items-center justify-center mb-2">'+isp(it,4)+'</div><div class="font-px text-[8px] mb-1.5 text-center leading-relaxed" style="color:var(--p-bg)">'+it.name+'</div>'+itemStats(it)+'<div class="font-px text-[9px] mt-2" style="color:var(--p-bg)">'+it.price+'G</div></div><div class="flex items-center justify-between pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="font-rt text-[10px]" style="color:var(--p-dk)">↑↓item ←→cat</span><span class="font-rt text-[10px]" style="color:var(--p-dk)">A=ord SEL=cmp B=back</span></div></div>';
+}
+// Buy mode: only show wishlist
+if(G.wishList.length>0){
+const n=G.wishList.length;
+return '<div class="h-full flex flex-col"><div class="flex items-center justify-between mb-1 pb-1 border-b-2" style="border-color:var(--p-dk)"><span class="font-px text-[7px]" style="color:var(--p-bg)">WISHLIST</span><span class="font-rt text-[11px]" style="color:var(--p-dk)">'+(G.ii+1)+'/'+n+'</span></div><div class="flex-1 flex flex-col items-center justify-center"><div class="gb-sunken w-16 h-16 flex items-center justify-center mb-2">'+isp(G.wishList[G.ii],4)+'</div><div class="font-px text-[8px] mb-1.5 text-center" style="color:var(--p-bg)">'+G.wishList[G.ii].name+'</div><div class="font-px text-[9px] mt-2" style="color:var(--p-bg)">'+G.wishList[G.ii].price+'G</div></div><div class="flex items-center justify-center pt-1 border-t-2" style="border-color:var(--p-dk)"><span class="font-rt text-[10px]" style="color:var(--p-dk)">A=order | B=back</span></div></div>';
+}
+return '<div class="h-full flex flex-col items-center justify-center">'+slimeH(4)+'<div class="font-px text-[9px] mt-3 mb-2" style="color:var(--p-bg)">WISHLIST EMPTY</div><div class="font-rt text-sm text-center" style="color:var(--p-dk)">No items to buy yet</div><div class="font-rt text-xs mt-2" style="color:var(--p-dk)">B = back</div></div>';
 }
 
 // ═══════════════════════════════════════
@@ -537,6 +560,26 @@ case 'main':{
 const n=6;
 if(b==='up'){G.cur=(G.cur+n-1)%n;sfxM()}
 if(b==='down'){G.cur=(G.cur+1)%n;sfxM()}
+if(b==='left'&&G.cur===0){
+const newMode=G.itemsMode==='buy'?'sell':'buy';
+G.itemsMode=newMode;
+sfxM();
+const nt=document.getElementById('mode-notif');
+nt.textContent=newMode.toUpperCase()+' MODE';
+nt.classList.remove('hidden');
+nt.style.opacity='1';
+setTimeout(()=>{nt.style.opacity='0';setTimeout(()=>nt.classList.add('hidden'),300)},1200);
+}
+if(b==='right'&&G.cur===0){
+const newMode=G.itemsMode==='buy'?'sell':'buy';
+G.itemsMode=newMode;
+sfxM();
+const nt=document.getElementById('mode-notif');
+nt.textContent=newMode.toUpperCase()+' MODE';
+nt.classList.remove('hidden');
+nt.style.opacity='1';
+setTimeout(()=>{nt.style.opacity='0';setTimeout(()=>nt.classList.add('hidden'),300)},1200);
+}
 if(b==='select'){
 G.pal=(G.pal+1)%PAL.length;
 if(!G.vPal.includes(G.pal))G.vPal.push(G.pal);
@@ -555,6 +598,7 @@ break;
 }
 
 case 'items':{
+if(G.itemsMode==='sell'){
 const cat=cats[G.ci],n=cat.items.length;
 if(b==='up'){G.ii=(G.ii+n-1)%n;sfxM()}
 if(b==='down'){G.ii=(G.ii+1)%n;sfxM()}
@@ -568,10 +612,22 @@ else{G.scr='compare';sfxS()}
 }
 }
 if(b==='a'){G.ordIt=cat.items[G.ii];G.scr='orderconf';sfxS()}
-if(b==='b'){
-if(G.cmpOn){G.cmpOn=false;G.cmpA=null;sfxB()}
-else{sfxB();G.scr='main';G.cur=0}
+if(b==='b'){sfxB();G.scr='main';G.cur=0}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
 }
+// Buy mode: only show wishlist
+if(G.wishList.length>0){
+const n=G.wishList.length;
+if(b==='up'){G.ii=(G.ii+n-1)%n;sfxM()}
+if(b==='down'){G.ii=(G.ii+1)%n;sfxM()}
+if(b==='a'){G.ordIt=G.wishList[G.ii];G.scr='orderconf';sfxS()}
+if(b==='b'){sfxB();G.scr='main';G.cur=0}
+if(b==='start'&&G.playing){stopM();sfxB()}
+break;
+}
+// Wishlist empty in buy mode
+if(b==='b'){sfxB();G.scr='main';G.cur=0}
 if(b==='start'&&G.playing){stopM();sfxB()}
 break;
 }

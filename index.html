@@ -298,6 +298,7 @@ const cats=[
 {name:"Red Dragon Gown",lv:66,atk:33,def:0,mag:0,spd:0,price:1000000,stock:2,img:"images/RedDragonGown.png"},
 {name:"Gold Rip Bracers",lv:56,atk:28,def:0,mag:0,spd:0,price:200000,stock:8,img:"images/Gold-ripBracers.png"},
 {name:"Feather Boots -2",lv:68,atk:0,def:0,mag:0,spd:34,price:1000000,stock:3,img:"images/FeatherBoots-2.png"},
+{name:"Silvery Star",lv:74,atk:0,def:0,mag:37,spd:0,price:1000000,stock:5,img:"images/Silvery Star.png"},
 ]},
 {name:"Special",ic:"lucide:gem",items:[]},
 {name:"Manufactures",ic:"lucide:flask-conical",items:[
@@ -345,7 +346,12 @@ gSt:'ready',gRes:null,
 cmpOn:false,cmpA:null,
 ordIt:null,
 itemsMode:ld('mode','buy'),
-wishList:[{name:"Alchemy Book 4",price:75000,img:"images/Alchemy Book 4.png"}],
+wishList:[
+{name:"Alchemy Book 4",price:75000,img:"images/Alchemy Book 4.png"},
+{name:"Alchemy Book 3",price:60000,img:"images/Alchemy Book 3.png"},
+{name:"Alchemy Book 2",price:40000,img:"images/Alchemy Book 2.png"},
+{name:"Alchemy Book 1",price:20000,img:"images/Alchemy Book 1.png"},
+],
 seenStock:ld('seenStock',{}),
 };
 function save(){sv('pal',G.pal);sv('ach',G.ach);sv('inv',G.inv);sv('vc',G.vCats);sv('vt',G.vTr);sv('vs',G.vScr);sv('vp',G.vPal);sv('el',G.el);sv('seenStock',G.seenStock);sv('mode',G.itemsMode)}
